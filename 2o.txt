@@ -1,0 +1,312 @@
+
+(1)
+create table placement(drive_id int not null auto_increment,Pcompany_name varchar(100) not null,package decimal not null,location varchar(100) not null,primary key(drive_id));
+Query OK, 0 rows affected (0.177 sec)
+
+MariaDB [te31454_db]> describe placement;
++---------------+---------------+------+-----+---------+----------------+
+| Field         | Type          | Null | Key | Default | Extra          |
++---------------+---------------+------+-----+---------+----------------+
+| drive_id      | int(11)       | NO   | PRI | NULL    | auto_increment |
+| Pcompany_name | varchar(100)  | NO   |     | NULL    |                |
+| package       | decimal(10,0) | NO   |     | NULL    |                |
+| location      | varchar(100)  | NO   |     | NULL    |                |
++---------------+---------------+------+-----+---------+----------------+
+4 rows in set (0.003 sec)
+
+MariaDB [te31454_db]> create table training(T_id int not null auto_increment ,Tcompany_name varchar(100) not null ,T_Fee decimal not null ,T_year int not null,primary key(T_id) );
+Query OK, 0 rows affected (0.174 sec)
+
+MariaDB [te31454_db]> describe training;
++---------------+---------------+------+-----+---------+----------------+
+| Field         | Type          | Null | Key | Default | Extra          |
++---------------+---------------+------+-----+---------+----------------+
+| T_id          | int(11)       | NO   | PRI | NULL    | auto_increment |
+| Tcompany_name | varchar(100)  | NO   |     | NULL    |                |
+| T_Fee         | decimal(10,0) | NO   |     | NULL    |                |
+| T_year        | int(11)       | NO   |     | NULL    |                |
++---------------+---------------+------+-----+---------+----------------+
+4 rows in set (0.003 sec)
+
+create table studentTable(s_id int not null auto_increment,drive_id int not null ,T_id int not null ,s_name varchar(100) not null ,CGPA float not null ,s_branch varchar(20) not null ,s_dob varchar(20) not null,primary key(s_id) ,foreign key (T_id) references training(T_id) on delete cascade, foreign key(drive_id) references placement(drive_id) on delete cascade );
+Query OK, 0 rows affected (0.336 sec)
+
+MariaDB [te31454_db]> describe studentTable;
++----------+--------------+------+-----+---------+----------------+
+| Field    | Type         | Null | Key | Default | Extra          |
++----------+--------------+------+-----+---------+----------------+
+| s_id     | int(11)      | NO   | PRI | NULL    | auto_increment |
+| drive_id | int(11)      | NO   | MUL | NULL    |                |
+| T_id     | int(11)      | NO   | MUL | NULL    |                |
+| s_name   | varchar(100) | NO   |     | NULL    |                |
+| CGPA     | float        | NO   |     | NULL    |                |
+| s_branch | varchar(20)  | NO   |     | NULL    |                |
+| s_dob    | varchar(20)  | NO   |     | NULL    |                |
++----------+--------------+------+-----+---------+----------------+
+7 rows in set (0.003 sec)
+MariaDB [te31454_db]>  insert into training(Tcompany_name,T_Fee,T_year) values('Mastercard',10000,2020),('Barclays',9000,2019),('PhonePe',9500,2021),('Bajaj Finserv',10500,2021),('HSBC',10000,2022),('Oracle',11000,2020),('Siemens',11000,2023);
+Query OK, 5 rows affected (0.034 sec)
+
+MariaDB [te31454_db]> select * from training;
++------+---------------+-------+--------+
+| T_id | Tcompany_name | T_Fee | T_year |
++------+---------------+-------+--------+
+|    1 | Mastercard    | 10000 |   2020 |
+|    2 | Barclays      |  9000 |   2019 |
+|    3 | PhonePe       |  9500 |   2021 |
+|    4 | Bajaj Finserv | 10500 |   2021 |
+|    5 | HSBC          | 10000 |   2022 |
+|    6 | Oracle        | 11000 |   2020 |
+|    7 | Siemens       | 11000 |   2023 |
++------+---------------+-------+--------+
+7 rows in set (0.002 sec)
+
+MariaDB [te31454_db]> insert into placement (Pcompany_name,package,location) values('Siemens',1100000,'Pune'),('Tracelink',1275000,'Bangalore'),('Bajaj Finserv',1281000,'Pune'),('Mastercard',2000000,'Hyderabad'),('PhonePe',1500000,'Hyderabad'),('Barclays',700000,'Mumbai'),('HSBC',650000,'Chennai');
+Query OK, 6 rows affected (0.032 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+MariaDB [te31454_db]> select * from placement;
++----------+---------------+---------+-----------+
+| drive_id | Pcompany_name | package | location  |
++----------+---------------+---------+-----------+
+|        1 | Siemens       | 1100000 | Pune      |
+|        2 | Tracelink     | 1275000 | Bangalore |
+|        3 | Bajaj Finserv | 1281000 | Pune      |
+|        4 | Mastercard    | 2000000 | Hyderabad |
+|        5 | PhonePe       | 1500000 | Hyderabad |
+|        6 | Barclays      |  700000 | Mumbai    |
+|        7 | HSBC          |  650000 | Chennai   |
++----------+---------------+---------+-----------+
+7 rows in set (0.001 sec)
+
+MariaDB [te31454_db]> insert into studentTable(s_name,CGPA,s_branch,s_dob,drive_id,T_id) values('Akshay',9.5,'Comp','08-08-2001',3,2),('Siddharth',9.52,'IT','08-08-2002',1,6),('Priya',9.2,'IT','12-10-2001',2,7),('Raj',8.9,'Comp','12-12-2000',5,1),('Neha',8.7,'EnTc','1-11-2003',6,3),('Dheeraj',8.7,'Comp','18-1-2001',4,3),('Deepak',9.3,'IT','18-9-2001',6,4),('Alia',9.65,'EnTc','18-9-2004',7,2),('Vedika',8.2,'EnTc','26-4-2003',2,7),('Shloka',7.2,'EnTc','30-9-2002',1,6);
+Query OK, 5 rows affected (0.032 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [te31454_db]> select * from studentTable;
++------+----------+------+-----------+------+----------+------------+
+| s_id | drive_id | T_id | s_name    | CGPA | s_branch | s_dob      |
++------+----------+------+-----------+------+----------+------------+
+|   11 |        3 |    2 | Akshay    |  9.5 | Comp     | 08-08-2001 |
+|   12 |        1 |    6 | Siddharth | 9.52 | IT       | 08-08-2002 |
+|   13 |        2 |    7 | Priya     |  9.2 | IT       | 12-10-2001 |
+|   14 |        5 |    1 | Raj       |  8.9 | Comp     | 12-12-2000 |
+|   15 |        6 |    3 | Neha      |  8.7 | EnTc     | 1-11-2003  |
+|   16 |        4 |    3 | Dheeraj   |  8.7 | Comp     | 18-1-2001  |
+|   17 |        6 |    4 | Deepak    |  9.3 | IT       | 18-9-2001  |
+|   18 |        7 |    2 | Alia      | 9.65 | EnTc     | 18-9-2004  |
+|   19 |        2 |    7 | Vedika    |  8.2 | EnTc     | 26-4-2003  |
+|   20 |        1 |    6 | Shloka    |  7.2 | EnTc     | 30-9-2002  |
++------+----------+------+-----------+------+----------+------------+
+10 rows in set (0.002 sec)
+
+(2)
+MariaDB [te31454_db]> select * from studentTable where s_branch='Comp' or s_branch='IT' and s_name like 'a%'or s_name like 'd%';
++------+----------+------+---------+------+----------+------------+
+| s_id | drive_id | T_id | s_name  | CGPA | s_branch | s_dob      |
++------+----------+------+---------+------+----------+------------+
+|   11 |        3 |    2 | Akshay  |  9.5 | Comp     | 08-08-2001 |
+|   14 |        5 |    1 | Raj     |  8.9 | Comp     | 12-12-2000 |
+|   16 |        4 |    3 | Dheeraj |  8.7 | Comp     | 18-1-2001  |
+|   17 |        6 |    4 | Deepak  |  9.3 | IT       | 18-9-2001  |
++------+----------+------+---------+------+----------+------------+
+4 rows in set (0.002 sec)
+
+(3)
+MariaDB [te31454_db]> select distinct Pcompany_name as CompanyName from placement;
++---------------+
+| CompanyName   |
++---------------+
+| Siemens       |
+| Tracelink     |
+| Bajaj Finserv |
+| Mastercard    |
+| PhonePe       |
+| Barclays      |
+| HSBC          |
++---------------+
+7 rows in set (0.001 sec)
+
+(4)
+MariaDB [te31454_db]> select (T_Fee+T_Fee*0.15) as Increased_Fee from training where T_year='2019';
++---------------+
+| Increased_Fee |
++---------------+
+|      10350.00 |
++---------------+
+1 row in set (0.001 sec)
+
+(5)
+MariaDB [te31454_db]> delete from studentTable where CGPA<7.5;
+Query OK, 1 row affected (0.031 sec)
+
+MariaDB [te31454_db]> select * from studentTable;
++------+----------+------+-----------+------+----------+------------+
+| s_id | drive_id | T_id | s_name    | CGPA | s_branch | s_dob      |
++------+----------+------+-----------+------+----------+------------+
+|   11 |        3 |    2 | Akshay    |  9.5 | Comp     | 08-08-2001 |
+|   12 |        1 |    6 | Siddharth | 9.52 | IT       | 08-08-2002 |
+|   13 |        2 |    7 | Priya     |  9.2 | IT       | 12-10-2001 |
+|   14 |        5 |    1 | Raj       |  8.9 | Comp     | 12-12-2000 |
+|   15 |        6 |    3 | Neha      |  8.7 | EnTc     | 1-11-2003  |
+|   16 |        4 |    3 | Dheeraj   |  8.7 | Comp     | 18-1-2001  |
+|   17 |        6 |    4 | Deepak    |  9.3 | IT       | 18-9-2001  |
+|   18 |        7 |    2 | Alia      | 9.65 | EnTc     | 18-9-2004  |
+|   19 |        2 |    7 | Vedika    |  8.2 | EnTc     | 26-4-2003  |
++------+----------+------+-----------+------+----------+------------+
+9 rows in set (0.002 sec)
+
+(6)
+MariaDB [te31454_db]> select Pcompany_name from placement where location='Pune' or location='Mumbai';
++---------------+
+| Pcompany_name |
++---------------+
+| Siemens       |
+| Bajaj Finserv |
+| Barclays      |
++---------------+
+3 rows in set (0.002 sec)
+
+(7)
+MariaDB [te31454_db]> select s.s_name from studentTable s where s.T_id in(select T_id from training where T_year = '2019' ) or s.T_id in (select T_id from training where T_year='2021');
++---------+
+| s_name  |
++---------+
+| Akshay  |
+| Neha    |
+| Dheeraj |
+| Deepak  |
+| Alia    |
++---------+
+5 rows in set (0.003 sec)
+
+(8)
+
+MariaDB [te31454_db]> select s_name as max_cgpa from studentTable where CGPA = (select max(CGPA) from studentTable);
++----------+
+| max_cgpa |
++----------+
+| Alia     |
++----------+
+1 row in set (0.002 sec)
+
+MariaDB [te31454_db]> select s_name as cgpa_7to9 from studentTable where CGPA between 7 and 9;
++-----------+
+| cgpa_7to9 |
++-----------+
+| Raj       |
+| Neha      |
+| Dheeraj   |
+| Vedika    |
++-----------+
+4 rows in set (0.001 sec)
+
+
+(9)
+MariaDB [te31454_db]> select s.s_name as studentName , t.T_Fee as trainingFee from studentTable s join training t on s.T_id = t.T_id order by t.T_Fee desc;
++-------------+-------------+
+| studentName | trainingFee |
++-------------+-------------+
+| Siddharth   |       11000 |
+| Vedika      |       11000 |
+| Priya       |       11000 |
+| Deepak      |       10500 |
+| Raj         |       10000 |
+| Neha        |        9500 |
+| Dheeraj     |        9500 |
+| Akshay      |        9000 |
+| Alia        |        9000 |
++-------------+-------------+
+9 rows in set (0.002 sec)
+
+(10)
+MariaDB [te31454_db]> select p.Pcompany_name,p.location,p.package,s.s_name from studentTable s join placement p on (p.drive_id = s.drive_id) where p.package in(1100000,1000000,1500000);
++---------------+-----------+---------+-----------+
+| Pcompany_name | location  | package | s_name    |
++---------------+-----------+---------+-----------+
+| Siemens       | Pune      | 1100000 | Siddharth |
+| PhonePe       | Hyderabad | 1500000 | Raj       |
++---------------+-----------+---------+-----------+
+2 rows in set (0.002 sec)
+
+
+SIMPLE VIEW:
+
+MariaDB [te31454_db]> create view cgpa as select s_name as studentName , CGPA , s_branch from studentTable where CGPA between 7 and 9;
+Query OK, 0 rows affected (0.029 sec)
+
+MariaDB [te31454_db]> select * from cgpa;
++-------------+------+----------+
+| studentName | CGPA | s_branch |
++-------------+------+----------+
+| Raj         |  8.9 | Comp     |
+| Neha        |  8.7 | EnTc     |
+| Dheeraj     |  8.7 | Comp     |
+| Vedika      |  8.2 | EnTc     |
++-------------+------+----------+
+4 rows in set (0.002 sec)
+
+
+COMPLEX VIEW:
+
+MariaDB [te31454_db]> create view placementStats as select s.s_name as studentName ,s_branch as studentBranch , p.Pcompany_name as companyName , p.package from studentTable s , placement p where s.drive_id=p.drive_id;
+Query OK, 0 rows affected (0.029 sec)
+
+MariaDB [te31454_db]> select * from placementStats;
++-------------+---------------+---------------+---------+
+| studentName | studentBranch | companyName   | package |
++-------------+---------------+---------------+---------+
+| Akshay      | Comp          | Bajaj Finserv | 1281000 |
+| Siddharth   | IT            | Siemens       | 1100000 |
+| Priya       | IT            | Tracelink     | 1275000 |
+| Raj         | Comp          | PhonePe       | 1500000 |
+| Neha        | EnTc          | Barclays      |  700000 |
+| Dheeraj     | Comp          | Mastercard    | 2000000 |
+| Deepak      | IT            | Barclays      |  700000 |
+| Alia        | EnTc          | HSBC          |  650000 |
+| Vedika      | EnTc          | Tracelink     | 1275000 |
++-------------+---------------+---------------+---------+
+9 rows in set (0.002 sec)
+
+
+SIMPLE INDEX:
+
+MariaDB [te31454_db]> create index name_index on studentTable (s_name);
+Query OK, 0 rows affected (0.148 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [te31454_db]> select * from studentTable where s_name='Deepak';
++------+----------+------+--------+------+----------+-----------+
+| s_id | drive_id | T_id | s_name | CGPA | s_branch | s_dob     |
++------+----------+------+--------+------+----------+-----------+
+|   17 |        6 |    4 | Deepak |  9.3 | IT       | 18-9-2001 |
++------+----------+------+--------+------+----------+-----------+
+1 row in set (0.002 sec)
+
+
+COMPOSITE INDEX:
+
+MariaDB [te31454_db]> create index name_year on training(Tcompany_name , T_year);
+Query OK, 0 rows affected (0.184 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [te31454_db]> select * from training use index(name_year) where T_year=2020 and Tcompany_name = 'Oracle';
++------+---------------+-------+--------+
+| T_id | Tcompany_name | T_Fee | T_year |
++------+---------------+-------+--------+
+|    6 | Oracle        | 11000 |   2020 |
++------+---------------+-------+--------+
+1 row in set (0.002 sec)
+
+
+MariaDB [te31454_db]> show indexes from studentTable;
++--------------+------------+------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table        | Non_unique | Key_name   | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++--------------+------------+------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| studentTable |          0 | PRIMARY    |            1 | s_id        | A         |           9 |     NULL | NULL   |      | BTREE      |         |               |
+| studentTable |          1 | T_id       |            1 | T_id        | A         |           9 |     NULL | NULL   |      | BTREE      |         |               |
+| studentTable |          1 | drive_id   |            1 | drive_id    | A         |           9 |     NULL | NULL   |      | BTREE      |         |               |
+| studentTable |          1 | name_index |            1 | s_name      | A         |           9 |     NULL | NULL   |      | BTREE      |         |               |
+| studentTable |          1 | br_index   |            1 | s_branch    | A         |           9 |     NULL | NULL   |      | BTREE      |         |               |
++--------------+------------+------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+5 rows in set (0.002 sec)
