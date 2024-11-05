@@ -1,0 +1,215 @@
+DBMSL Assignment 3
+Roll No. 31454
+Batch: M4
+
+(1)
+MariaDB [te31454_db]> select * from studentTable natural join placement;
++----------+------+------+-----------+------+----------+------------+---------------+---------+-----------+
+| drive_id | s_id | T_id | s_name    | CGPA | s_branch | s_dob      | Pcompany_name | package | location  |
++----------+------+------+-----------+------+----------+------------+---------------+---------+-----------+
+|        3 |   11 |    2 | Akshay    |  9.5 | Comp     | 08-08-2001 | Bajaj Finserv | 1281000 | Pune      |
+|        1 |   12 |    6 | Siddharth | 9.52 | IT       | 08-08-2002 | Siemens       | 1100000 | Pune      |
+|        2 |   13 |    7 | Priya     |  9.2 | IT       | 12-10-2001 | Tracelink     | 1275000 | Bangalore |
+|        5 |   14 |    1 | Raj       |  8.9 | Comp     | 12-12-2000 | PhonePe       | 1500000 | Hyderabad |
+|        6 |   15 |    3 | Neha      |  8.7 | EnTc     | 1-11-2003  | Barclays      |  700000 | Mumbai    |
+|        4 |   16 |    3 | Dheeraj   |  8.7 | Comp     | 18-1-2001  | Mastercard    | 2000000 | Hyderabad |
+|        6 |   17 |    4 | Deepak    |  9.3 | IT       | 18-9-2001  | Barclays      |  700000 | Mumbai    |
+|        7 |   18 |    2 | Alia      | 9.65 | EnTc     | 18-9-2004  | HSBC          |  650000 | Chennai   |
+|        2 |   19 |    7 | Vedika    |  8.2 | EnTc     | 26-4-2003  | Tracelink     | 1275000 | Bangalore |
++----------+------+------+-----------+------+----------+------------+---------------+---------+-----------+
+9 rows in set (0.002 sec)
+
+
+(2)
+MariaDB [te31454_db]> select s.s_id,s.s_name,p.Pcompany_name from studentTable s join placement p on s.drive_id=p.drive_id ;
++------+-----------+---------------+
+| s_id | s_name    | Pcompany_name |
++------+-----------+---------------+
+|   11 | Akshay    | Bajaj Finserv |
+|   12 | Siddharth | Siemens       |
+|   13 | Priya     | Tracelink     |
+|   14 | Raj       | PhonePe       |
+|   15 | Neha      | Barclays      |
+|   16 | Dheeraj   | Mastercard    |
+|   17 | Deepak    | Barclays      |
+|   18 | Alia      | HSBC          |
+|   19 | Vedika    | Tracelink     |
++------+-----------+---------------+
+9 rows in set (0.002 sec)
+
+
+(3)
+MariaDB [te31454_db]> select s.s_name , s.s_branch from studentTable s left join placement p using(drive_id) where p.package=700000;
++--------+----------+
+| s_name | s_branch |
++--------+----------+
+| Neha   | EnTc     |
+| Deepak | IT       |
++--------+----------+
+2 rows in set (0.002 sec)
+
+
+(4)
+MariaDB [te31454_db]> select s.s_name , t.Tcompany_name from studentTable s inner join training t on (s.T_id = t.T_id ) where t.T_Fee>10000;
++-----------+---------------+
+| s_name    | Tcompany_name |
++-----------+---------------+
+| Siddharth | Oracle        |
+| Priya     | Siemens       |
+| Deepak    | Bajaj Finserv |
+| Vedika    | Siemens       |
++-----------+---------------+
+4 rows in set (0.015 sec)
+
+
+(5)
+MariaDB [te31454_db]> select t.*,s.s_name from training t right outer join studentTable s  on(s.T_id=t.T_id)  where s.s_name='Akshay' and t.T_year='2019';
++------+---------------+-------+--------+--------+
+| T_id | Tcompany_name | T_Fee | T_year | s_name |
++------+---------------+-------+--------+--------+
+|    2 | Barclays      |  9000 |   2019 | Akshay |
++------+---------------+-------+--------+--------+
+1 row in set (0.002 sec)
+
+
+(6)
+MariaDB [te31454_db]> select count(Tcompany_name) as count from training inner join studentTable on training.T_id = studentTable.T_id where T_year<=2020;
++-------+
+| count |
++-------+
+|     4 |
++-------+
+1 row in set (0.001 sec)
+
+(7)
+MariaDB [te31454_db]> select * from studentTable s left outer join placement p on s.drive_id=p.drive_id where p.Pcompany_name='Siemens' and p.location='Pune';
++------+----------+------+-----------+------+----------+------------+----------+---------------+---------+----------+
+| s_id | drive_id | T_id | s_name    | CGPA | s_branch | s_dob      | drive_id | Pcompany_name |package | location |
++------+----------+------+-----------+------+----------+------------+----------+---------------+---------+----------+
+|   12 |        1 |    6 | Siddharth | 9.52 | IT       | 08-08-2002 |        1 | Siemens       | 1100000 | Pune     |
++------+----------+------+-----------+------+----------+------------+----------+---------------+---------+----------+
+1 row in set (0.002 sec)
+
+(8)
+MariaDB [te31454_db]> select s_name from studentTable s right outer join training t on s.T_id = t.T_id where Tcompany_name = 'Barclays';
++--------+
+| s_name |
++--------+
+| Akshay |
+| Alia   |
++--------+
+2 rows in set (0.002 sec)
+
+(9)
+MariaDB [te31454_db]> create view stud_training as select s.s_id, s.s_name,
+    -> s.CGPA,s.s_branch,s.s_dob, t.T_id,
+    -> t.Tcompany_name,t.T_fee,t.T_year FROM studentTable s inner join training t ON
+    -> s.T_id = t.T_id;
+Query OK, 0 rows affected (0.031 sec)
+
+MariaDB [te31454_db]> select * from stud_training;
++------+-----------+------+----------+------------+------+---------------+-------+--------+
+| s_id | s_name    | CGPA | s_branch | s_dob      | T_id | Tcompany_name | T_fee | T_year |
++------+-----------+------+----------+------------+------+---------------+-------+--------+
+|   11 | Akshay    |  9.5 | Comp     | 08-08-2001 |    2 | Barclays      |  9000 |   2019 |
+|   12 | Siddharth | 9.52 | IT       | 08-08-2002 |    6 | Oracle        | 11000 |   2020 |
+|   13 | Priya     |  9.2 | IT       | 12-10-2001 |    7 | Siemens       | 11000 |   2023 |
+|   14 | Raj       |  8.9 | Comp     | 12-12-2000 |    1 | Mastercard    | 10000 |   2020 |
+|   15 | Neha      |  8.7 | EnTc     | 1-11-2003  |    3 | PhonePe       |  9500 |   2021 |
+|   16 | Dheeraj   |  8.7 | Comp     | 18-1-2001  |    3 | PhonePe       |  9500 |   2021 |
+|   17 | Deepak    |  9.3 | IT       | 18-9-2001  |    4 | Bajaj Finserv | 10500 |   2021 |
+|   18 | Alia      | 9.65 | EnTc     | 18-9-2004  |    2 | Barclays      |  9000 |   2019 |
+|   19 | Vedika    |  8.2 | EnTc     | 26-4-2003  |    7 | Siemens       | 11000 |   2023 |
++------+-----------+------+----------+------------+------+---------------+-------+--------+
+9 rows in set (0.002 sec)
+
+
+(10)
+
+MariaDB [te31454_db]> create view training_view as select * from training;
+Query OK, 0 rows affected (0.033 sec)
+
+MariaDB [te31454_db]> select * from training_view;
++------+---------------+-------+--------+
+| T_id | Tcompany_name | T_Fee | T_year |
++------+---------------+-------+--------+
+|    1 | Mastercard    | 10000 |   2020 |
+|    2 | Barclays      |  9000 |   2019 |
+|    3 | PhonePe       |  9500 |   2021 |
+|    4 | Bajaj Finserv | 10500 |   2021 |
+|    5 | HSBC          | 10000 |   2022 |
+|    6 | Oracle        | 11000 |   2020 |
+|    7 | Siemens       | 11000 |   2023 |
++------+---------------+-------+--------+
+7 rows in set (0.002 sec)
+
+MariaDB [te31454_db]> insert into training_view(Tcompany_name , T_Fee , T_year) values('Google',7000,2019);
+Query OK, 1 row affected (0.037 sec)
+
+MariaDB [te31454_db]> select * from training_view;
++------+---------------+-------+--------+
+| T_id | Tcompany_name | T_Fee | T_year |
++------+---------------+-------+--------+
+|    1 | Mastercard    | 10000 |   2020 |
+|    2 | Barclays      |  9000 |   2019 |
+|    3 | PhonePe       |  9500 |   2021 |
+|    4 | Bajaj Finserv | 10500 |   2021 |
+|    5 | HSBC          | 10000 |   2022 |
+|    6 | Oracle        | 11000 |   2020 |
+|    7 | Siemens       | 11000 |   2023 |
+|    8 | Google        |  7000 |   2019 |
++------+---------------+-------+--------+
+8 rows in set (0.002 sec)
+
+
+MariaDB [te31454_db]> delete from training_view where Tcompany_name='Google';
+Query OK, 1 row affected (0.040 sec)
+
+MariaDB [te31454_db]> select * from training_view;
++------+---------------+-------+--------+
+| T_id | Tcompany_name | T_Fee | T_year |
++------+---------------+-------+--------+
+|    1 | Mastercard    | 10000 |   2020 |
+|    2 | Barclays      |  9000 |   2019 |
+|    3 | PhonePe       |  9500 |   2021 |
+|    4 | Bajaj Finserv | 10500 |   2021 |
+|    5 | HSBC          | 10000 |   2022 |
+|    6 | Oracle        | 11000 |   2020 |
+|    7 | Siemens       | 11000 |   2023 |
++------+---------------+-------+--------+
+7 rows in set (0.002 sec)
+
+MariaDB [te31454_db]> describe training_view;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| T_id          | int(11)       | NO   |     | 0       |       |
+| Tcompany_name | varchar(100)  | NO   |     | NULL    |       |
+| T_Fee         | decimal(10,0) | NO   |     | NULL    |       |
+| T_year        | int(11)       | NO   |     | NULL    |       |
++---------------+---------------+------+-----+---------+-------+
+4 rows in set (0.003 sec)
+
+MariaDB [te31454_db]> update training_view set T_Fee=T_Fee+1000 where Tcompany_name='Oracle';
+Query OK, 1 row affected (0.035 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [te31454_db]> select * from training_view;
++------+---------------+-------+--------+
+| T_id | Tcompany_name | T_Fee | T_year |
++------+---------------+-------+--------+
+|    1 | Mastercard    | 10000 |   2020 |
+|    2 | Barclays      |  9000 |   2019 |
+|    3 | PhonePe       |  9500 |   2021 |
+|    4 | Bajaj Finserv | 10500 |   2021 |
+|    5 | HSBC          | 10000 |   2022 |
+|    6 | Oracle        | 12000 |   2020 |
+|    7 | Siemens       | 11000 |   2023 |
++------+---------------+-------+--------+
+7 rows in set (0.002 sec)
+
+
+MariaDB [te31454_db]> drop view training_view;
+Query OK, 0 rows affected (0.001 sec)
+
+
